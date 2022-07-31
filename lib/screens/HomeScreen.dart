@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedNavIndex = 0;
   late List<Map<String, dynamic>> mangaList;
   late List<Map<String, dynamic>> mangaListLinks;
-  bool mangaLoaded = false;
+  bool mangaLoaded = false; //For mangaList
 
   //Essentially
   void navBarTap(int index) {
@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedNavIndex = index;
     });
   }
-
   //function that scrapes the manga
   //base url is the base domain, /read is the route
   // go to https://pub.dev/packages/web_scraper for more info
@@ -72,6 +71,16 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchManga();
   }
 
+  //Function that handles the opening links in browser, temporarily
+  Future<void> _launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
   Widget build(BuildContext context) {
     Size screenSize =
         MediaQuery.of(context).size; //used to retrieve device screen size
@@ -97,8 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     //START OF MANGA NUM CONTAINER
                     Container(
                       //color: Colors.blue, //DEBUGGING
-                      width: double
-                          .infinity, //tbh i dont know what this does, if i comment it out nothing changes
+                      width: double.infinity,
                       height: 30, //makes the container 30px tall
                       padding: EdgeInsets.only(left: 10), //moves
                       alignment: Alignment.centerLeft,
@@ -115,10 +123,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     for (int i = 0; i < mangaList.length; i++)
                       Container(
                         //color: Colors.red, //DEBUGGING
-
                         child: MangaCard(
                           mangaImg: mangaList[i]['attributes']['src'],
                           mangaTitle: mangaList[i]['attributes']['alt'],
+                          url: Uri.parse(mangaListLinks[i]['attributes']['href']), 
+                          
                         ),
                       ),
 
