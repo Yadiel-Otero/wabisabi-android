@@ -1,6 +1,17 @@
+/*
+  --------------------------------------------------------------------------------
+  | THIS COMPONENT IS RESPONSIBLE FOR DISPLAYING THE MANGA IMAGE, TITLE, URL,    |
+  | ETC... IN THE HOMESCREEN.DART FILE                                           |                      
+  |                                                                              |
+  |  In short, a manga image, title and url is webscraped and passed on to this  |   
+  |  widget to render a box with said info.                                      |
+  --------------------------------------------------------------------------------
+ 
+*/
+
 import 'package:flutter/material.dart';
-import '../constants/constants.dart';
-import 'CustomText.dart';
+import '../../constants/constants.dart';
+import '../CustomText.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MangaCard extends StatelessWidget {

@@ -1,17 +1,22 @@
 /*
   --------------------------------------------------------------------------------
-  | THE HOMESCREEN.DART FILE IS USED FOR MODELING THE HOMESCREEN.                                                                     
-  | - This is the MAIN screen and what you will see when you open the app.
-  | - This file stores the mangaList that's scraped AND the scraper mechanics are                                                                          
-  |   programmed here.  
-  | - Apart from the scraper, this file contains things such as                                                                    
+  | THE HOMESCREEN.DART FILE IS USED FOR MODELING THE HOMESCREEN.                |                                                    
+  | - This is the MAIN screen and what you will see when you open the app.       |
+  | - The appbar, body and bottom navigation bar are coded here.                 |
+  |                                                                              |
+  | - This file stores the scraped manga list and urls and passes it as a        |
+  |    parameter to the MangaList.dart widget constructor so it can work its     | 
+  |    magic.
+  |  - Apart from the scraper, this file contains things such as                  |                                                 
   --------------------------------------------------------------------------------
  
 */
 import 'package:flutter/material.dart';
+import 'package:wabisabi/components/homeScreen/MangaList.dart';
 import 'package:web_scraper/web_scraper.dart'; //WebScraper
+import '../components/homeScreen/MangaLoading.dart';
 import '../constants/constants.dart'; //Colors, baseURL, etc...
-import '../components/MangaCard.dart'; //Manga card item
+import '../components/homeScreen/MangaCard.dart'; //Manga card item
 import '../components/CustomText.dart';
 import 'package:google_fonts/google_fonts.dart'; //Nunito Font
 import 'package:url_launcher/url_launcher.dart'; //launching url on tap
@@ -87,74 +92,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Library',
-          style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
+        title: CustomText(
+          text: 'Discover',
+          fontSize: 26,
+          fontWeight: FontWeight.w800,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
         ),
         backgroundColor: Constants.lightGray,
       ),
       body: mangaLoaded
-          ? Container(
-              height: screenSize.height,
-              width: screenSize.width,
-              color: Constants.black,
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                //reason for wrap is so that if it goes out of bounds it will automatically go down
-                child: Wrap(
-                  children: [
-                    //START OF MANGA NUM CONTAINER
-                    Container(
-                      //color: Colors.blue, //DEBUGGING
-                      width: double.infinity,
-                      height: 30, //makes the container 30px tall
-                      padding: EdgeInsets.only(left: 10), //moves
-                      alignment: Alignment.centerLeft,
-                      child: CustomText(
-                        text: mangaList.length.toString() + ' Manga',
-                        fontSize: 23,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    //END OF MANGA NUM CONTAINER
-
-                    //START OF MangaCard CONTAINER
-                    //loop to generate as many cards as mangaList length
-                    for (int i = 0; i < mangaList.length; i++)
-                      Container(
-                        //color: Colors.red, //DEBUGGING
-                        child: MangaCard(
-                          mangaImg: mangaList[i]['attributes']['src'],
-                          mangaTitle: mangaList[i]['attributes']['alt'],
-                          url: Uri.parse(mangaListLinks[i]['attributes']['href']), 
-                          
-                        ),
-                      ),
-
-                    /* Center(
-                        child: MangaCard(
-                          mangaImg:
-                              'https://avt.mkklcdnv6temp.com/48/k/24-1634298190.jpg',
-                          mangaTitle: 'The Lone Necromancer',
-                        ),
-                      ),
-                      */
-                  ],
-                ),
-              ),
-            )
-          : Container(
-              height: screenSize.height,
-              width: screenSize.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  Text('Loading...'),
-                ],
-              ),
-            ),
+          ? MangaList(mangaList: mangaList, mangaListLinks: mangaListLinks)
+          : MangaLoading(),
       //BOTTOM NAV BAR
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -168,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.explore_outlined),
             label: 'Discover',
+        
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
