@@ -30,9 +30,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedNavIndex = 0;
+  bool mangaLoaded = false; //For mangaList
+  int routeNumber = 1;
+  int previousRoute = 0;
   late List<Map<String, dynamic>> mangaList;
   late List<Map<String, dynamic>> mangaListLinks;
-  bool mangaLoaded = false; //For mangaList
+  late List<Map<String, dynamic>> mangaListNextLinks;
+ 
 
   //Essentially
   void navBarTap(int index) {
@@ -48,25 +52,44 @@ class _HomeScreenState extends State<HomeScreen> {
     final webscraper = WebScraper(Constants.baseUrl);
 
     //if no route available, leave blank
-    if (await webscraper.loadWebPage('/www')) {
+    if (await webscraper.loadWebPage('/advanced_search?s=all&orby=topview&page=' + routeNumber.toString())) {
       mangaList = webscraper.getElement(
-        'div.container.container-main > div.container-main-left > div.panel-content-homepage > div > a > img', //manga
+        'div.panel-content-genres > div > a > img', 
         ['src', 'alt'],
+
+        //'div.container.container-main > div.container-main-left > div.panel-content-homepage > div > a > img', //manga
+        //['src', 'alt'],
       );
       mangaListLinks = webscraper.getElement(
-        'div.container.container-main > div.container-main-left > div.panel-content-homepage > div > a', //manga
+        'div.panel-content-genres > div > a', 
         ['href'],
+        
+        //'div.container.container-main > div.container-main-left > div.panel-content-homepage > div > a', //manga
+        //['href'],
       );
+
+       mangaListNextLinks = webscraper.getElement(
+        'div.panel-page-number > div.group-page > a', 
+        ['href'],
+        );
     }
 
-    for (int i = 0; i < mangaList.length; i++) print(mangaListLinks);
-
-    //mangaList[i]['attributes'].removeWhere((key, value) => key == key || value == null); //for removing null values
-    //print(mangaList); //manga
-    //print(mangaList[i]['attributes']['src']); //manga
+    for (int i = 0; i < mangaList.length; i++) 
+    print(mangaListNextLinks);
+    /*
+     ******************DEBUGGING**********************
+    mangaList[i]['attributes'].removeWhere((key, value) => key == key || value == null); //for removing null values
+    print(mangaList); //manga
+    print(mangaListLinks);
+    print(mangaList[i]['attributes']['src']); //manga
+    */
+    
     setState(() {
       mangaLoaded = true;
     });
+    
+    routeNumber++;
+    previousRoute = routeNumber - 1;
   }
 
   //I dont know what this does
@@ -91,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
         MediaQuery.of(context).size; //used to retrieve device screen size
 
     return Scaffold(
+      backgroundColor: Constants.black,
       appBar: AppBar(
         title: CustomText(
           text: 'Discover',
@@ -105,10 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Constants.lightGray,
       ),
       body: mangaLoaded
-          ? MangaList(mangaList: mangaList, mangaListLinks: mangaListLinks)
+          ? MangaList(mangaList: mangaList, mangaListLinks: mangaListLinks, nextLink: fetchManga,)
           : MangaLoading(),
       //BOTTOM NAV BAR
       bottomNavigationBar: BottomNavigationBar(
+
         type: BottomNavigationBarType.fixed,
         backgroundColor: Constants.lightGray,
         selectedItemColor: Constants.lightblue,

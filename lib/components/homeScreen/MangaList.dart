@@ -11,7 +11,11 @@ class MangaList extends StatelessWidget {
 
   late List<Map<String, dynamic>> mangaList;
   late List<Map<String, dynamic>> mangaListLinks;
-  MangaList({required this.mangaList, required this.mangaListLinks}) {}
+  Function nextLink;
+  MangaList(
+      {required this.mangaList,
+      required this.mangaListLinks,
+      required this.nextLink}) {}
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class MangaList extends StatelessWidget {
               padding: EdgeInsets.only(left: 10), //moves
               alignment: Alignment.centerLeft,
               child: CustomText(
-                text: mangaList.length.toString() + ' Manga',
+                text: mangaList.length.toString() + ' Manga (DEBUGGING)',
                 fontSize: 23,
                 fontWeight: FontWeight.w800,
               ),
@@ -62,6 +66,13 @@ class MangaList extends StatelessWidget {
                         ),
                       ),
                       */
+            Center(
+              child: FloatingActionButton(
+                onPressed: () => nextLink(),
+                child: Icon(Icons.arrow_forward),
+                backgroundColor: Constants.lightGray,
+              ),
+            ),
           ],
         ),
       ),
