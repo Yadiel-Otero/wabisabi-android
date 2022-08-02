@@ -9,13 +9,17 @@ import 'MangaCard.dart';
 class MangaList extends StatelessWidget {
   //const MangaList({Key? key}) : super(key: key);
 
-  late List<Map<String, dynamic>> mangaList;
-  late List<Map<String, dynamic>> mangaListLinks;
+//no need to be late since im receiving it as a parameter
+  List<Map<String, dynamic>> mangaList;
+  List<Map<String, dynamic>> mangaListLinks;
   Function nextLink;
+
   MangaList(
       {required this.mangaList,
       required this.mangaListLinks,
-      required this.nextLink}) {}
+      required this.nextLink}){}
+  
+  
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +57,12 @@ class MangaList extends StatelessWidget {
                 child: MangaCard(
                   mangaImg: mangaList[i]['attributes']['src'],
                   mangaTitle: mangaList[i]['attributes']['alt'],
-                  url: Uri.parse(mangaListLinks[i]['attributes'][
-                      'href']), //Makes the string a Uri object so i can pass it to the URI member inside mangaCard
+                  url: Uri.parse(
+                    mangaListLinks[i]['attributes']['href'],
+                  ), //Makes the string a Uri object so i can pass it to the URI member inside mangaCard
                 ),
               ),
+              
 
             /* Center(
                         child: MangaCard(

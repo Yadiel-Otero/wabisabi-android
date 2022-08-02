@@ -1,5 +1,5 @@
 //this widget is a simple loading screen that appears until the manga list is loaded
-
+import '../CustomText.dart';
 import 'package:flutter/material.dart';
 
 class MangaLoading extends StatelessWidget {
@@ -15,7 +15,7 @@ class MangaLoading extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(),
-          Text('Loading...'),
+          CustomText(text: 'Getting Wacky...', fontSize: 20,fontWeight: FontWeight.w800,),
         ],
       ),
     );
