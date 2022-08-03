@@ -6,15 +6,15 @@
   |                                                                              |
   | - This file stores the scraped manga list and urls and passes it as a        |
   |    parameter to the MangaList.dart widget constructor so it can work its     | 
-  |    magic.
-  |  - Apart from the scraper, this file contains things such as                  |                                                 
+  |    magic.                                                                    |
+  |  - Apart from the scraper, this file contains things such as                 |                                                 
   --------------------------------------------------------------------------------
- 
-*/
-import 'dart:ffi';
 
+*/
 import 'package:flutter/material.dart';
 import 'package:wabisabi/components/homeScreen/MangaList.dart';
+import 'package:wabisabi/screens/DetailScreen.dart';
+import 'package:wabisabi/screens/SearchScreen.dart';
 import 'package:web_scraper/web_scraper.dart'; //WebScraper
 import '../components/homeScreen/MangaLoading.dart';
 import '../constants/constants.dart'; //Colors, baseURL, etc...
@@ -40,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<Map<String, dynamic>> mangaListLinks;
   late List<Map<String, dynamic>> mangaListNextLinks;
   late List<Map<String, dynamic>> mangaListSearch;
-  final GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>(); //for the form, idk what this is
+  //for the form, idk what this is
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   //Essentially
   void navBarTap(int index) {
@@ -77,20 +77,15 @@ class _HomeScreenState extends State<HomeScreen> {
         //['href'],
       );
 
-      mangaListNextLinks += webscraper.getElement(
-        'div.panel-page-number > div.group-page > a',
-        ['href'],
-      );
-
-      mangaListSearch = webscraper.getElement(
+      mangaListNextLinks = webscraper.getElement(
         'div.panel-page-number > div.group-page > a',
         ['href'],
       );
     }
 
-    for (int i = 0; i < mangaList.length; i++) print(mangaListNextLinks);
     /*
      ******************DEBUGGING**********************
+    //for (int i = 0; i < mangaList.length; i++)
     mangaList[i]['attributes'].removeWhere((key, value) => key == key || value == null); //for removing null values
     print(mangaList); //manga
     print(mangaListLinks);
@@ -103,9 +98,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
     routeNumber++;
     previousRoute = routeNumber - 1;
+    print("routeNumber: " + routeNumber.toString());
   }
+   //for (int i = 0; i < mangaList.length; i++)
+    /*
+     ******************DEBUGGING**********************
+    mangaList[i]['attributes'].removeWhere((key, value) => key == key || value == null); //for removing null values
+    print(mangaList); //manga
+    print(mangaListLinks);
+    print(mangaList[i]['attributes']['src']); //manga
+    */
 
-  //I dont know what this does
+/*
+*******************ORIGINAL SEARCH FUNCTION WAS HERE******************  
+ void fetchMangaSearch() async {
+    final webscraper = WebScraper(Constants.baseUrl);
+
+    //if no route available, leave blank
+    if (await webscraper.loadWebPage(
+        '/search/story/' + searchTerm.replaceAll(" ", "_").toLowerCase())) {
+      mangaList = webscraper.getElement(
+        'div.search-story-item > a > img',
+        ['src', 'alt'],
+      );
+
+      mangaListLinks = webscraper.getElement(
+        'div.search-story-item > a',
+        ['href'],
+      );
+
+      routeNumber = 1;
+    }
+  }
+*/
+ 
+
+
+
+  //It runs each of the things inside it once before drawing the screen
   @override
   void initState() {
     super.initState();
@@ -118,23 +148,10 @@ class _HomeScreenState extends State<HomeScreen> {
     mangaListSearch = [];
   }
 
-  //Function that handles the opening links in browser, temporarily
-  Future<void> _launchInBrowser(Uri url) async {
-    if (!await launchUrl(
-      url,
-      mode: LaunchMode.externalApplication,
-    )) {
-      throw 'Could not launch $url';
-    }
-  }
-
   Widget build(BuildContext context) {
-    Size screenSize =
-        MediaQuery.of(context).size; //used to retrieve device screen size
-
     return Scaffold(
       backgroundColor: Constants.black,
-      appBar: AppBar(
+      /* appBar: AppBar(
         title: CustomText(
           text: 'Discover',
           fontSize: 26,
@@ -146,56 +163,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         backgroundColor: Constants.lightGray,
-      ),
+      ),*/
       body: mangaLoaded
-          ? Stack(
+          ? PageView(
               children: [
-                MangaList(
-                  mangaList: mangaList,
-                  mangaListLinks: mangaListLinks,
-                  nextLink: fetchManga,
+                Stack(
+                  children: [
+                    MangaList(
+                      mangaList: mangaList,
+                      mangaListLinks: mangaListLinks,
+                      nextLink: fetchManga,
+                      routeNumber: routeNumber,
+                    ),
+                  ],
                 ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      TextFormField(
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                        onChanged: (value) => {
-                          searchTerm = value,
-                          //debugging purposes
-                          print(searchTerm),
-                        },
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.search, color: Colors.white),
-                          hintText: 'Feeling wacky?',
-                          hintStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (String? value) => setState(
-                          () {
-                            fetchManga();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                SearchScreen(),
               ],
+              
             )
           : MangaLoading(),
-      //BOTTOM NAV BAR
-      bottomNavigationBar: BottomNavigationBar(
+
+      /*bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Constants.lightGray,
         selectedItemColor: Constants.lightblue,
@@ -207,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.explore_outlined),
             label: 'Discover',
+            
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
@@ -222,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      */
     );
   }
 }

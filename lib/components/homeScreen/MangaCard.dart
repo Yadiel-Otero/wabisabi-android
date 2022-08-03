@@ -10,6 +10,7 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:wabisabi/screens/DetailScreen.dart';
 import '../../constants/constants.dart';
 import '../CustomText.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,10 +19,10 @@ class MangaCard extends StatelessWidget {
   final String mangaImg;
   final String mangaTitle;
   final Uri url;
- 
 
-  MangaCard({required this.mangaImg, required this.mangaTitle, required this.url});
- Future<void> _launchInBrowser(Uri url) async {
+  MangaCard(
+      {required this.mangaImg, required this.mangaTitle, required this.url});
+  Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
       url,
       mode: LaunchMode.externalApplication,
@@ -32,15 +33,20 @@ class MangaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //On tap: go to DetailScreen
     return GestureDetector(
-      onTap: () => _launchInBrowser(url),
+      onTap: () => Navigator.of(context).push(
+            new MaterialPageRoute(
+              builder: (BuildContext context) => new DetailScreen(),
+            ),
+          ), //your login class name,
       child: Container(
         //margin on all sides to get a bit of space between each card
         margin: EdgeInsetsDirectional.all(7),
         //color: Colors.blue, //DEBUGGING
         height: 240, //makes manga card 250px tall
         width: 115, //makes manga card 130px wide
-    
+
         child: Column(
           children: [
             Expanded(
@@ -48,7 +54,7 @@ class MangaCard extends StatelessWidget {
               child: Container(
                 width: double.infinity, //fill its parent
                 height: double.infinity,
-    
+
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Colors.white),
@@ -65,13 +71,12 @@ class MangaCard extends StatelessWidget {
             Expanded(
               flex: 15,
               child: Container(
-    
                 height: double.infinity,
                 width: double.infinity,
-                alignment: Alignment.topLeft, //Title starts from top left of container
-                
+                alignment:
+                    Alignment.topLeft, //Title starts from top left of container
+
                 child: CustomText(
-                  
                   text: mangaTitle,
                   fontSize: 14,
                   fontWeight: FontWeight.w800,

@@ -13,13 +13,14 @@ class MangaList extends StatelessWidget {
   List<Map<String, dynamic>> mangaList;
   List<Map<String, dynamic>> mangaListLinks;
   Function nextLink;
+  int? routeNumber;
 
-  MangaList(
-      {required this.mangaList,
-      required this.mangaListLinks,
-      required this.nextLink}){}
-  
-  
+  MangaList({
+    required this.mangaList,
+    required this.mangaListLinks,
+    required this.nextLink,
+    this.routeNumber,
+  }) {}
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class MangaList extends StatelessWidget {
       height: screenSize.height,
       width: screenSize.width,
       color: Constants.black,
+      margin: EdgeInsets.only(top: 30),
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         //reason for wrap is so that if it goes out of bounds it will automatically go down
@@ -62,7 +64,6 @@ class MangaList extends StatelessWidget {
                   ), //Makes the string a Uri object so i can pass it to the URI member inside mangaCard
                 ),
               ),
-              
 
             /* Center(
                         child: MangaCard(
@@ -74,7 +75,7 @@ class MangaList extends StatelessWidget {
                       */
             Center(
               child: FloatingActionButton(
-                onPressed: () => nextLink(),
+                onPressed: () => {nextLink()},
                 child: Icon(Icons.arrow_forward),
                 backgroundColor: Constants.lightGray,
               ),
