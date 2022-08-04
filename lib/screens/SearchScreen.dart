@@ -18,6 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   late List<Map<String, dynamic>> mangaListSearchLinks;
   late List<Map<String, dynamic>> mangaListNextLinks;
   String searchTerm = '';
+  int pageNumber = 1;
   bool searchLoaded = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -27,20 +28,21 @@ class _SearchScreenState extends State<SearchScreen> {
     final webscraper = WebScraper(Constants.baseUrl);
 
     if (await webscraper.loadWebPage(
-        '/search/story/' + searchTerm.replaceAll(" ", "_").toLowerCase())) {
-      mangaListSearch = webscraper.getElement(
+        '/search/story/' + searchTerm.replaceAll(" ", "_").toLowerCase() + '?page=' + pageNumber.toString())) {
+      mangaListSearch += webscraper.getElement(
         'div.search-story-item > a > img',
         ['src', 'alt'],
       );
 
-      mangaListSearchLinks = webscraper.getElement(
+      mangaListSearchLinks += webscraper.getElement(
         'div.search-story-item > a',
         ['href'],
       );
     }
 
     setState(() {
-      //searchLoaded = true;
+      pageNumber++;
+      print('page number: ' + pageNumber.toString());
     });
   }
 
@@ -51,6 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
     //else when it entered the function it would try to sum an itself while not initialized
     mangaListSearch = [];
     mangaListSearchLinks = [];
+    pageNumber = 1; //so that it resets when i switch pages
   }
 
   Widget build(BuildContext context) {
@@ -59,10 +62,14 @@ class _SearchScreenState extends State<SearchScreen> {
       body: searchLoaded
           ? Stack(
               children: [
-                MangaList(
-                  mangaList: mangaListSearch,
-                  mangaListLinks: mangaListSearchLinks,
-                  nextLink: fetchMangaSearch,
+                Container(
+                  margin: EdgeInsets.only(top: 100),
+                  child: MangaList(
+                    mangaList: mangaListSearch,
+                    mangaListLinks: mangaListSearchLinks,
+                    nextLink: fetchMangaSearch,
+                    text: 'Search Results',
+                  ),
                 ),
                 Positioned(
                   child: Form(
@@ -82,6 +89,9 @@ class _SearchScreenState extends State<SearchScreen> {
                               searchTerm = value,
                               //debugging purposes
                               print(searchTerm),
+                              pageNumber = 1,
+                              mangaListSearch = [],
+                              mangaListSearchLinks = [],
                             },
                             decoration: InputDecoration(
                               fillColor: Constants.lightGray,

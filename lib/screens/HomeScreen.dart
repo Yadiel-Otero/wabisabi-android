@@ -96,15 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
     previousRoute = routeNumber - 1;
     print("routeNumber: " + routeNumber.toString());
   }
-   //for (int i = 0; i < mangaList.length; i++)
-    /*
-     ******************DEBUGGING**********************
-    mangaList[i]['attributes'].removeWhere((key, value) => key == key || value == null); //for removing null values
-    print(mangaList); //manga
-    print(mangaListLinks);
-    print(mangaList[i]['attributes']['src']); //manga
-    */
-
+ 
 /*
 *******************ORIGINAL SEARCH FUNCTION WAS HERE******************  
  void fetchMangaSearch() async {
@@ -169,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mangaListLinks: mangaListLinks,
                       nextLink: fetchManga,
                       routeNumber: routeNumber,
+                      text: 'Manga (DEBUGGING)',
                     ),
                   ],
                 ),

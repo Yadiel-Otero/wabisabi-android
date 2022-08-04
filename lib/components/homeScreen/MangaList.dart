@@ -14,12 +14,14 @@ class MangaList extends StatelessWidget {
   List<Map<String, dynamic>> mangaListLinks;
   Function nextLink;
   int? routeNumber;
+  String text;
 
   MangaList({
     required this.mangaList,
     required this.mangaListLinks,
     required this.nextLink,
     this.routeNumber,
+    required this.text,
   }) {}
 
   @override
@@ -44,7 +46,7 @@ class MangaList extends StatelessWidget {
               padding: EdgeInsets.only(left: 10), //moves
               alignment: Alignment.centerLeft,
               child: CustomText(
-                text: mangaList.length.toString() + ' Manga (DEBUGGING)',
+                text: mangaList.length.toString() + ' ' + text + ' ',
                 fontSize: 23,
                 fontWeight: FontWeight.w800,
               ),
