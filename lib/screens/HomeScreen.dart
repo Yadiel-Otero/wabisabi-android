@@ -39,9 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<Map<String, dynamic>> mangaList;
   late List<Map<String, dynamic>> mangaListLinks;
   late List<Map<String, dynamic>> mangaListNextLinks;
-  late List<Map<String, dynamic>> mangaListSearch;
-  //for the form, idk what this is
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  
 
   //Essentially
   void navBarTap(int index) {
@@ -59,9 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //if no route available, leave blank
     if (await webscraper.loadWebPage(
         '/advanced_search?s=all&orby=topview&page=' +
-            routeNumber.toString() +
-            '&keyw=' +
-            searchTerm)) {
+            routeNumber.toString() )) {
       mangaList += webscraper.getElement(
         'div.panel-content-genres > div > a > img',
         ['src', 'alt'],
@@ -145,7 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
     mangaList = [];
     mangaListLinks = [];
     mangaListNextLinks = [];
-    mangaListSearch = [];
   }
 
   Widget build(BuildContext context) {

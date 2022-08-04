@@ -11,7 +11,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:wabisabi/screens/DetailScreen.dart';
-import '../../constants/constants.dart';
+//import '../../constants/constants.dart';
 import '../CustomText.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,6 +22,8 @@ class MangaCard extends StatelessWidget {
 
   MangaCard(
       {required this.mangaImg, required this.mangaTitle, required this.url});
+
+  //function used to launch in browser on tap but its no longer in use
   Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
       url,
@@ -35,11 +37,15 @@ class MangaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     //On tap: go to DetailScreen
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-            new MaterialPageRoute(
-              builder: (BuildContext context) => new DetailScreen(),
+      onTap: () => {
+        Navigator.of(context).push(
+          new MaterialPageRoute(
+            builder: (BuildContext context) => new DetailScreen(mangaCard: MangaCard(mangaImg: mangaImg, mangaTitle: mangaTitle, url: url),
+             
             ),
-          ), //your login class name,
+          ),
+        ),
+      },
       child: Container(
         //margin on all sides to get a bit of space between each card
         margin: EdgeInsetsDirectional.all(7),

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import '../components/homeScreen/MangaCard.dart';
 
-class DetailScreen extends StatefulWidget {
-  DetailScreen({Key? key}) : super(key: key);
+class DetailScreen extends StatelessWidget {
+  //const DetailScreen({Key? key}) : super(key: key);
+  final MangaCard mangaCard;
 
-  @override
-  State<DetailScreen> createState() => _DetailScreenState();
-}
+  DetailScreen({
+    required this.mangaCard,
+  }) {}
 
-class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Details should appear here'),
+    return Container(
+      child: SingleChildScrollView(
+        child:
+        Text('hello'),
+      ),
     );
   }
 }

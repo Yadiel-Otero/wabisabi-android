@@ -18,7 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   late List<Map<String, dynamic>> mangaListSearchLinks;
   late List<Map<String, dynamic>> mangaListNextLinks;
   String searchTerm = '';
-  bool searchLoaded = false;
+  bool searchLoaded = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   SearchScreen() {}
@@ -40,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     setState(() {
-      searchLoaded = true;
+      //searchLoaded = true;
     });
   }
 
@@ -51,7 +51,6 @@ class _SearchScreenState extends State<SearchScreen> {
     //else when it entered the function it would try to sum an itself while not initialized
     mangaListSearch = [];
     mangaListSearchLinks = [];
-    fetchMangaSearch();
   }
 
   Widget build(BuildContext context) {
