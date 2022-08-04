@@ -40,8 +40,10 @@ class MangaCard extends StatelessWidget {
       onTap: () => {
         Navigator.of(context).push(
           new MaterialPageRoute(
-            builder: (BuildContext context) => new DetailScreen(mangaCard: MangaCard(mangaImg: mangaImg, mangaTitle: mangaTitle, url: url),
-             
+            builder: (BuildContext context) => new DetailScreen(
+              mangaImg: mangaImg,
+              mangaTitle: mangaTitle,
+              url: url,
             ),
           ),
         ),

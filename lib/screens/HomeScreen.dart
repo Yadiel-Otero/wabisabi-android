@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mangaListLinks: mangaListLinks,
                       nextLink: fetchManga,
                       routeNumber: routeNumber,
-                      text: 'Manga (DEBUGGING)',
+                      text: 'Popular Manga (DEBUGGING)',
                     ),
                   ],
                 ),
