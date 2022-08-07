@@ -8,9 +8,24 @@ class DetailScreen extends StatelessWidget {
   final String mangaImg;
   final String mangaTitle;
   final Uri url;
+  String? author;
+  String? status;
+  String? genre; //I'll have to see
+  String? lastUpdated;
+  String? viewCount;
+  String? rating;
+
+
 
   DetailScreen(
-      {required this.mangaImg, required this.mangaTitle, required this.url}) {}
+      {required this.mangaImg, required this.mangaTitle, required this.url}) {
+        author = this.author ?? 'Not Available';
+        status = this.status ?? 'Not Available';
+        genre = this.genre ?? 'Not Available';
+        lastUpdated = this.lastUpdated ?? 'Not Available';
+        viewCount = this.viewCount ?? 'Not Available';
+        rating = this.rating ?? 'Not Available';
+      }
 
   @override
   Widget build(BuildContext context) {
@@ -77,11 +92,13 @@ class DetailScreen extends StatelessWidget {
                               width: double.infinity,
                               color: Colors.amber,
                               child: FloatingActionButton(
-                                onPressed: null,
+                                onPressed: (() => print('Hello')),
                                 child: CustomText(text: 'Add to Favorites'),
                                 backgroundColor: Colors.transparent,
-                                //Removes shadow left behind when i make color transparent
-                                disabledElevation: 0,
+                                //Removes shadow while idle
+                                elevation: 0,
+                                //Removes shadow on press
+                                highlightElevation: 0,
                               ),
                             ),
                           ),
@@ -91,20 +108,99 @@ class DetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
               //author, status, genres, updated, viewCount, rating
               Container(
                 color: Colors.green,
                 width: double.infinity,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'Author(s): ',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'Status: ',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'Genres: ',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'Updated: ',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'View Count: ',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'Rating: ',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               //Synopsis
               Container(
                 color: Colors.blue,
                 width: double.infinity,
+                child: Column(
+                  children: [
+                    CustomText(
+                      text: 'Synopsis',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    )
+                  ],
+                ),
               ),
               //Chapters
               Container(
-                color: Colors.yellow,
+                color: Colors.orange,
                 width: double.infinity,
+                child: Column(
+                  children: [
+                    CustomText(
+                      text: 'Chapters',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    //for loop to generate as many rows with double.infinity width as there are chapters
+                    //rows()...
+                  ],
+                ),
               ),
             ],
           ),

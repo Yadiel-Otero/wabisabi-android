@@ -10,7 +10,7 @@
 */
 
 import 'package:flutter/material.dart';
-import 'package:wabisabi/screens/DetailScreen.dart';
+import 'package:wabisabi/screens/NewDetailScreen.dart';
 //import '../../constants/constants.dart';
 import '../CustomText.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -40,7 +40,7 @@ class MangaCard extends StatelessWidget {
       onTap: () => {
         Navigator.of(context).push(
           new MaterialPageRoute(
-            builder: (BuildContext context) => new DetailScreen(
+            builder: (BuildContext context) => NewDetailScreen(
               mangaImg: mangaImg,
               mangaTitle: mangaTitle,
               url: url,

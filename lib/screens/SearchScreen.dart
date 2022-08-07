@@ -5,7 +5,7 @@ import 'package:web_scraper/web_scraper.dart'; //WebScraper
 import '../components/homeScreen/MangaLoading.dart';
 import '../constants/constants.dart'; //Colors, baseURL, etc...
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends StatefulWidget{
   SearchScreen({Key? key}) : super(key: key);
 
   @override
@@ -27,8 +27,10 @@ class _SearchScreenState extends State<SearchScreen> {
   void fetchMangaSearch() async {
     final webscraper = WebScraper(Constants.baseUrl);
 
-    if (await webscraper.loadWebPage(
-        '/search/story/' + searchTerm.replaceAll(" ", "_").toLowerCase() + '?page=' + pageNumber.toString())) {
+    if (await webscraper.loadWebPage('/search/story/' +
+        searchTerm.replaceAll(" ", "_").toLowerCase() +
+        '?page=' +
+        pageNumber.toString())) {
       mangaListSearch += webscraper.getElement(
         'div.search-story-item > a > img',
         ['src', 'alt'],
@@ -80,10 +82,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           TextFormField(
-
                             style: TextStyle(
                               color: Colors.white,
-                              
                             ),
                             onChanged: (value) => {
                               searchTerm = value,
@@ -102,7 +102,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 color: Colors.white,
                               ),
                             ),
-
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter some text';

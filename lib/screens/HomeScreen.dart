@@ -39,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<Map<String, dynamic>> mangaList;
   late List<Map<String, dynamic>> mangaListLinks;
   late List<Map<String, dynamic>> mangaListNextLinks;
-  
 
   //Essentially
   void navBarTap(int index) {
@@ -56,8 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //if no route available, leave blank
     if (await webscraper.loadWebPage(
-        '/advanced_search?s=all&orby=topview&page=' +
-            routeNumber.toString() )) {
+        '/advanced_search?s=all&orby=topview&page=' + routeNumber.toString())) {
       mangaList += webscraper.getElement(
         'div.panel-content-genres > div > a > img',
         ['src', 'alt'],
@@ -96,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
     previousRoute = routeNumber - 1;
     print("routeNumber: " + routeNumber.toString());
   }
- 
+
 /*
 *******************ORIGINAL SEARCH FUNCTION WAS HERE******************  
  void fetchMangaSearch() async {
@@ -119,9 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 */
- 
-
-
 
   //It runs each of the things inside it once before drawing the screen
   @override
@@ -167,7 +162,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SearchScreen(),
               ],
-              
             )
           : MangaLoading(),
 

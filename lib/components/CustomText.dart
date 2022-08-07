@@ -7,11 +7,13 @@ class CustomText extends StatelessWidget {
   double? fontSize;
   FontWeight? fontWeight;
   Color? color;
+  int? maxLines;
 
-  CustomText({required this.text, this.fontSize, this.fontWeight, this.color}) {
+  CustomText({required this.text, this.fontSize, this.fontWeight, this.color, this.maxLines}) {
     fontSize = this.fontSize ?? 16;
     fontWeight = this.fontWeight ?? FontWeight.w500;
     color = this.color ?? Colors.white;
+    maxLines = this.maxLines ?? 2;
   }
 
   @override
@@ -20,7 +22,7 @@ class CustomText extends StatelessWidget {
       text,
       //softWrap: true,
       overflow: TextOverflow.ellipsis, //add three dots at text overflow
-      maxLines: 2, //max lines of text before ellipsis
+      maxLines: maxLines, //max lines of text before ellipsis
       style: GoogleFonts.nunito(
         fontSize: fontSize,
         fontWeight: fontWeight,
