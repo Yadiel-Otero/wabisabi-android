@@ -13,7 +13,6 @@
 */
 import 'package:flutter/material.dart';
 import 'package:wabisabi/components/homeScreen/MangaList.dart';
-import 'package:wabisabi/screens/DetailScreen.dart';
 import 'package:wabisabi/screens/SearchScreen.dart';
 import 'package:web_scraper/web_scraper.dart'; //WebScraper
 import '../components/homeScreen/MangaLoading.dart';
@@ -94,29 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
     previousRoute = routeNumber - 1;
     print("routeNumber: " + routeNumber.toString());
   }
-
-/*
-*******************ORIGINAL SEARCH FUNCTION WAS HERE******************  
- void fetchMangaSearch() async {
-    final webscraper = WebScraper(Constants.baseUrl);
-
-    //if no route available, leave blank
-    if (await webscraper.loadWebPage(
-        '/search/story/' + searchTerm.replaceAll(" ", "_").toLowerCase())) {
-      mangaList = webscraper.getElement(
-        'div.search-story-item > a > img',
-        ['src', 'alt'],
-      );
-
-      mangaListLinks = webscraper.getElement(
-        'div.search-story-item > a',
-        ['href'],
-      );
-
-      routeNumber = 1;
-    }
-  }
-*/
 
   //It runs each of the things inside it once before drawing the screen
   @override

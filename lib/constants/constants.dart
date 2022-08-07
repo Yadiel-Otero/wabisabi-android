@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constants
 {
+  //static const String baseUrl = 'https://mangasee123.com/';
   static const String baseUrl = 'https://m.manganelo.com';
   static const String chapUrl = 'https://chapmanganelo.com/';
   static const Color darkGray = Color.fromRGBO(33, 33, 33, 1);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wabisabi/components/homeScreen/MangaList.dart';
-import 'package:wabisabi/screens/DetailScreen.dart';
+
 import 'package:web_scraper/web_scraper.dart'; //WebScraper
 import '../components/homeScreen/MangaLoading.dart';
 import '../constants/constants.dart'; //Colors, baseURL, etc...
