@@ -14,8 +14,9 @@ class SearchScreen extends StatefulWidget{
 
 class _SearchScreenState extends State<SearchScreen> {
   final webscraper = WebScraper(Constants.baseUrl);
-  late List<Map<String, dynamic>> mangaListSearch;
+  late List<Map<String, dynamic>> mangaListSearchTitle;
   late List<Map<String, dynamic>> mangaListSearchLinks;
+  late List<Map<String, dynamic>> mangaListSearchImages;
   late List<Map<String, dynamic>> mangaListNextLinks;
   String searchTerm = '';
   int pageNumber = 1;
@@ -25,22 +26,34 @@ class _SearchScreenState extends State<SearchScreen> {
   SearchScreen() {}
 
   void fetchMangaSearch() async {
-    final webscraper = WebScraper(Constants.baseUrl);
+    final webscraper = WebScraper('https://mangapill.com');
 
-    if (await webscraper.loadWebPage('/search/story/' +
-        searchTerm.replaceAll(" ", "_").toLowerCase() +
-        '?page=' +
+    if (await webscraper.loadWebPage('/search?q=' +
+        searchTerm.replaceAll(" ", "+").toLowerCase() +
+        '&status=&type=&page=' +
         pageNumber.toString())) {
-      mangaListSearch += webscraper.getElement(
-        'div.search-story-item > a > img',
-        ['src', 'alt'],
+      
+      //[i]['title']
+      mangaListSearchTitle += webscraper.getElement(
+        'div.container.py-3 > div > div > div > a > div.mt-3.font-black.leading-tight.line-clamp-2',
+        [],
       );
 
+      //[i]['attributes']['href']
       mangaListSearchLinks += webscraper.getElement(
-        'div.search-story-item > a',
+        'div.container.py-3 > div > div > a',
         ['href'],
       );
+       
+       //[i]['attributes']['data-src']
+       mangaListSearchImages += webscraper.getElement(
+        'div.container.py-3 > div > div > a > figure > img',
+        ['data-src'],
+      );
     }
+
+    for (int i = 0; i < mangaListSearchTitle.length; i++){print(mangaListSearchTitle[i]['title']);}
+    
 
     setState(() {
       pageNumber++;
@@ -53,7 +66,8 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     //Needed to initialize them as empty so that i can do the first += assignment,
     //else when it entered the function it would try to sum an itself while not initialized
-    mangaListSearch = [];
+    mangaListSearchTitle = [];
+    mangaListSearchImages = [];
     mangaListSearchLinks = [];
     pageNumber = 1; //so that it resets when i switch pages
   }
@@ -67,8 +81,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 Container(
                   margin: EdgeInsets.only(top: 100),
                   child: MangaList(
-                    mangaList: mangaListSearch,
+                    mangaListTitle: mangaListSearchTitle,
                     mangaListLinks: mangaListSearchLinks,
+                    mangaListImages: mangaListSearchImages,
                     nextLink: fetchMangaSearch,
                     text: 'Search Results',
                   ),
@@ -90,8 +105,9 @@ class _SearchScreenState extends State<SearchScreen> {
                               //debugging purposes
                               print(searchTerm),
                               pageNumber = 1,
-                              mangaListSearch = [],
+                              mangaListSearchTitle = [],
                               mangaListSearchLinks = [],
+                              mangaListSearchImages = [],
                             },
                             decoration: InputDecoration(
                               fillColor: Constants.lightGray,

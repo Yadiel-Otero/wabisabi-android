@@ -10,19 +10,21 @@ class MangaList extends StatelessWidget {
   //const MangaList({Key? key}) : super(key: key);
 
 //no need to be late since im receiving it as a parameter
-  List<Map<String, dynamic>> mangaList;
+  List<Map<String, dynamic>> mangaListTitle;
+  List<Map<String, dynamic>> mangaListImages;
   List<Map<String, dynamic>> mangaListLinks;
   Function nextLink;
   int? routeNumber;
   String text;
 
   MangaList({
-    required this.mangaList,
+    required this.mangaListTitle,
+    required this.mangaListImages,
     required this.mangaListLinks,
     required this.nextLink,
     this.routeNumber,
     required this.text,
-  }) {}
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class MangaList extends StatelessWidget {
               padding: EdgeInsets.only(left: 10), //moves
               alignment: Alignment.centerLeft,
               child: CustomText(
-                text: mangaList.length.toString() + ' ' + text + ' ',
+                text: mangaListTitle.length.toString() + ' ' + text + ' ',
                 fontSize: 23,
                 fontWeight: FontWeight.w800,
               ),
@@ -55,12 +57,12 @@ class MangaList extends StatelessWidget {
 
             //START OF MangaCard CONTAINER
             //loop to generate as many cards as mangaList length
-            for (int i = 0; i < mangaList.length; i++)
+            for (int i = 0; i < mangaListTitle.length; i++)
               Container(
                 //color: Colors.red, //DEBUGGING
                 child: MangaCard(
-                  mangaImg: mangaList[i]['attributes']['src'],
-                  mangaTitle: mangaList[i]['attributes']['alt'],
+                  mangaImg: mangaListImages[i]['attributes']['data-src'],
+                  mangaTitle: mangaListTitle[i]['title'],
                   url: Uri.parse(
                     mangaListLinks[i]['attributes']['href'],
                   ), //Makes the string a Uri object so i can pass it to the URI member inside mangaCard

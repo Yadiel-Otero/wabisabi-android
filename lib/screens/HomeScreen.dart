@@ -1,13 +1,14 @@
 /*
   --------------------------------------------------------------------------------
-  | THE HOMESCREEN.DART FILE IS USED FOR MODELING THE HOMESCREEN.                |                                                    
+  | THE HOMESCREEN.DART FILE IS USED FOR MODELING THE HOMESCREEN.                                                                    
   | - This is the MAIN screen and what you will see when you open the app.       |
-  | - The appbar, body and bottom navigation bar are coded here.                 |
+  |                
   |                                                                              |
   | - This file stores the scraped manga list and urls and passes it as a        |
   |    parameter to the MangaList.dart widget constructor so it can work its     | 
   |    magic.                                                                    |
-  |  - Apart from the scraper, this file contains things such as                 |                                                 
+  |  
+  - Apart from the scraper, this file contains things such as                                                                  
   --------------------------------------------------------------------------------
 
 */
@@ -32,10 +33,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedNavIndex = 0;
   bool mangaLoaded = false; //For mangaList
-  int routeNumber = 1;
-  int previousRoute = 0;
-  String searchTerm = '';
-  late List<Map<String, dynamic>> mangaList;
+  //int routeNumber = 1;
+  //int previousRoute = 0;
+ 
+  late List<Map<String, dynamic>> mangaListTitle;
+  late List<Map<String, dynamic>> mangaListImages;
   late List<Map<String, dynamic>> mangaListLinks;
   late List<Map<String, dynamic>> mangaListNextLinks;
 
@@ -50,31 +52,47 @@ class _HomeScreenState extends State<HomeScreen> {
   //base url is the base domain, /read is the route
   // go to https://pub.dev/packages/web_scraper for more info
   void fetchManga() async {
-    final webscraper = WebScraper(Constants.baseUrl);
+    final webscraper = WebScraper('https://mangapill.com');
 
     //if no route available, leave blank
-    if (await webscraper.loadWebPage(
-        '/advanced_search?s=all&orby=topview&page=' + routeNumber.toString())) {
-      mangaList += webscraper.getElement(
-        'div.panel-content-genres > div > a > img',
-        ['src', 'alt'],
+    if (await webscraper.loadWebPage('')) {
+      
+      //[i][attributes][data-src]
+      mangaListImages += webscraper.getElement(
+        'div.container.py-4 > div > div > a >figure > img',
+        ['data-src'],
+        /*
+        MANGA PAGES 
+         'div.border.rounded.border-b-0.border-border.primary.overflow-hidden > div.relative.bg-card.flex.justify-center.items-center > picture > img',
+        ['data-src', 'alt'],
+        */
 
         //'div.container.container-main > div.container-main-left > div.panel-content-homepage > div > a > img', //manga
         //['src', 'alt'],
       );
+
+      //[i][title]
+      //i need to assign title: from 1 index onward 
+      mangaListTitle += webscraper.getElement(
+        
+        'div.container.py-4 > div > div > div > a',
+        [],
+      );
+
+      //[i][attributes][href]
       mangaListLinks += webscraper.getElement(
-        'div.panel-content-genres > div > a',
-        ['href'],
-
-        //'div.container.container-main > div.container-main-left > div.panel-content-homepage > div > a', //manga
-        //['href'],
-      );
-
-      mangaListNextLinks = webscraper.getElement(
-        'div.panel-page-number > div.group-page > a',
+        
+        'div.container.py-4 > div > div > a',
         ['href'],
       );
+
+
     }
+
+    //I had to remove the first index because it was taking something from another div(TEMPORARY until i fix the core problem)
+    mangaListTitle.removeAt(0);
+
+   
 
     /*
      ******************DEBUGGING**********************
@@ -88,10 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       mangaLoaded = true;
     });
-
-    routeNumber++;
-    previousRoute = routeNumber - 1;
-    print("routeNumber: " + routeNumber.toString());
   }
 
   //It runs each of the things inside it once before drawing the screen
@@ -101,9 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchManga();
     //Needed to initialize them as empty so that i can do the first += assignment,
     //else when it entered the function it would try to sum an itself while not initialized
-    mangaList = [];
+    mangaListTitle = [];
     mangaListLinks = [];
     mangaListNextLinks = [];
+    mangaListImages = [];
   }
 
   Widget build(BuildContext context) {
@@ -128,10 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Stack(
                   children: [
                     MangaList(
-                      mangaList: mangaList,
+                      mangaListImages: mangaListImages,
+                      mangaListTitle: mangaListTitle,
                       mangaListLinks: mangaListLinks,
+                      //for now, no routeNumber because there is no next button in the main page
                       nextLink: fetchManga,
-                      routeNumber: routeNumber,
                       text: 'Popular Manga (DEBUGGING)',
                     ),
                   ],

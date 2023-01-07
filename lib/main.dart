@@ -10,6 +10,7 @@
 */
 import 'package:flutter/material.dart';
 import 'package:wabisabi/components/DetailScreen/ChapterCard.dart';
+import 'package:wabisabi/screens/SearchScreen.dart';
 import '/screens/HomeScreen.dart';
 
 void main() => runApp(MyApp());

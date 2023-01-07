@@ -14,7 +14,7 @@ class ChapterCard extends StatelessWidget {
       onTap: () => {
         Navigator.of(context).push(
           new MaterialPageRoute(
-            builder: (BuildContext context) => ContentScreen(url: ''),
+            builder: (BuildContext context) => ContentScreen(),
           ),
         ),
       },

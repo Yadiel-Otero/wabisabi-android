@@ -11,21 +11,20 @@ class DetailScreen extends StatefulWidget {
   final String mangaImg;
   final String mangaTitle;
   final Uri url;
-  String author = '';
+  //String author = '';
   String status = '';
-  String genre = ''; //I'll have to see if they can be clickable
-  String lastUpdated = '';
-  String viewCount = '';
-  String rating = '';
+  String type = '';
+  String genre = '';
+  //String lastUpdated = '';
+  //String viewCount = '';
+  //String rating = '';
   String description = '';
+  String year = '';
   bool detailsLoaded = false;
-  late List<Map<String, dynamic>> topDetails;
-  late List<Map<String, dynamic>> topDetails2;
-  late List<Map<String, dynamic>> topDetails3;
-  late List<Map<String, dynamic>> topDetailsException;
-  late List<Map<String, dynamic>> descriptionDetails;
-  late List<Map<String, dynamic>> chapterList;
-  String detailsFirstValue = '';
+  late List<Map<String, dynamic>> descriptionScraped;
+  late List<Map<String, dynamic>> typeStatusYearScraped;
+  late List<Map<String, dynamic>> genreScraped;
+  late List<Map<String, dynamic>> chapterListScraped;
 
   DetailScreen(
       {required this.mangaImg, required this.mangaTitle, required this.url}) {}
@@ -35,100 +34,54 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   void fetchMangaDetails() async {
-    final webscraper = WebScraper(Constants.chapUrl);
+    final webscraper = WebScraper('https://mangapill.com');
 
     //if no route available, leave blank
-    if (await webscraper.loadWebPage(
-      widget.url
-          .toString()
-          .replaceAll(RegExp('https://chapmanganelo.com/'), ''),
-    )) {
-      widget.topDetails = webscraper.getElement(
-        'div.story-info-right > table > tbody > tr > td.table-value',
-        [],
-      );
-      widget.topDetails2 = webscraper.getElement(
-        'div.story-info-right-extent > p > span.stre-value',
+    if (await webscraper.loadWebPage(widget.url.toString().trim())) {
+      //[i]['title']
+      widget.descriptionScraped = webscraper.getElement(
+        'div.container > div > div > div > p',
         [],
       );
 
-      widget.topDetails3 = webscraper.getElement(
-        'div.story-info-right-extent > p >  em',
+      //remove index[0]
+      //[i][title] - 0 type, 1 status, 2 year
+      widget.typeStatusYearScraped = webscraper.getElement(
+        'div.container > div > div > div > div > div',
         [],
       );
 
-      widget.topDetailsException = webscraper.getElement(
-        'div.story-info-right > table > tbody > tr > td',
+      //[i]['title']
+      widget.genreScraped = webscraper.getElement(
+        'div.container > div > div > div.mb-3 > a',
         [],
       );
 
-      widget.descriptionDetails = webscraper.getElement(
-        'div#panel-story-info-description.panel-story-info-description',
-        [],
+      //[i]['title'] for title
+      //[i]['attributes']['href'] for chapter link
+      widget.chapterListScraped = webscraper.getElement(
+        'div.container > div.border.border-border.rounded > div#chapters.p-3 > div > a',
+        ['href'],
       );
-
-      widget.chapterList = webscraper.getElement(
-        'div.panel-story-chapter-list > ul > li > a',
-        ['href', 'title'],
-      );
-
-      //to determine if alternative or author is first
-      widget.detailsFirstValue = widget.topDetailsException[0]['title'];
     }
 
-    /*logic to skip a table row and assign correct values 
-      because sometimes there was a Alternative names row
-      and it would move all the other rows down by one
-      
-      also, .trim() is used to remove all whitespaces*/
-    if (widget.detailsFirstValue == 'Alternative :') {
-      widget.author = widget.topDetails[1]['title'].toString().trim();
-      widget.status = widget.topDetails[2]['title'].toString().trim();
-      widget.genre = widget.topDetails[3]['title'].toString().trim();
-      widget.lastUpdated = widget.topDetails2[0]['title'].toString().trim();
-      widget.viewCount = widget.topDetails2[1]['title'].toString().trim();
-      widget.rating = widget.topDetails3[0]['title']
-          .toString()
-          .replaceAll('MangaNelo.com rate :', '')
-          .trim();
-      widget.description = widget.descriptionDetails[0]['title']
-          .toString()
-          .replaceAll('Description :', '')
-          .trim();
-    } else {
-      widget.author = widget.topDetails[0]['title'].toString().trim();
-      widget.status = widget.topDetails[1]['title'].toString().trim();
-      widget.genre = widget.topDetails[2]['title'].toString().trim();
-      widget.lastUpdated = widget.topDetails2[0]['title'].toString().trim();
-      widget.viewCount = widget.topDetails2[1]['title'].toString().trim();
-      widget.rating = widget.topDetails3[0]['title']
-          .toString()
-          .replaceAll('MangaNelo.com rate :', '')
-          .trim();
-    }
-
-    //print(widget.chapterList[0]['attributes']['href'].toString().replaceAll('https://chapmanganelo.com/', ''));
-
-    /*
-     ******************DEBUGGING**********************
-  print('Author: ' +
-        widget.author +
-        '\n' +
-        'Status: ' +
-        widget.status +
-        '\n' +
-        'Genre: ' +
-        widget.genre +
-        '\n');
-    
-    print(widget.topDetails);
-    
-    print(widget.detailsFirstValue);
-    */
+    //To remove first index that display useless info (TEMPORARY)
+    widget.typeStatusYearScraped.removeAt(0);
 
     setState(() {
       widget.detailsLoaded = true;
     });
+
+    widget.description = widget.descriptionScraped[0]['title'];
+    widget.type = widget.typeStatusYearScraped[0]['title'];
+    widget.status = widget.typeStatusYearScraped[1]['title'];
+    widget.year = widget.typeStatusYearScraped[2]['title'];
+
+    for (int i = 0; i < widget.genreScraped.length; i++) {
+      widget.genre += ' ' + widget.genreScraped[i]['title'];
+    }
+
+    //print(widget.chapterListScraped);
   }
 
   Future<void> _launchInBrowser(Uri url) async {
@@ -240,32 +193,12 @@ class _DetailScreenState extends State<DetailScreen> {
                         direction: Axis.vertical,
                         children: [
                           CustomText(
-                            text: 'Author(s): ' + widget.author,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                          CustomText(
                             text: 'Status: ' + widget.status,
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
                           ),
                           CustomText(
                             text: 'Genre: ' + widget.genre,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                          CustomText(
-                            text: 'Updated: ' + widget.lastUpdated,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                          CustomText(
-                            text: 'View Count: ' + widget.viewCount,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                          CustomText(
-                            text: 'Rating: ' + widget.rating,
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
                           ),
@@ -303,30 +236,29 @@ class _DetailScreenState extends State<DetailScreen> {
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                           ),
-
-                          for (int i = 0; i < widget.chapterList.length; i++)
+                          for (int i = 0;
+                              i < widget.chapterListScraped.length;
+                              i++)
                             GestureDetector(
                               onTap: () => {
-                                _launchInBrowser(
+                                /*
+                                   _launchInBrowser(
                                   Uri.parse(
-                                    widget.chapterList[i]['attributes']['href'],
+                                    'https://mangapill.com' +
+                                    widget.chapterListScraped[i]['attributes']['href'],
                                   ),
                                 ),
+                                */
 
-                                /*
                                 Navigator.of(context).push(
                                   new MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         ContentScreen(
-                                      url: widget.chapterList[i]['attributes']
-                                              ['href']
-                                          .toString()
-                                          .replaceAll(
-                                              'https://chapmanganelo.com/', ''),
+                                    //You would pass the chapters so the 
+                                    //images would be displayed
                                     ),
                                   ),
                                 ),
-                                 */
                               },
                               child: Container(
                                 width: 360,
@@ -339,12 +271,10 @@ class _DetailScreenState extends State<DetailScreen> {
                                 child: CustomText(
                                   fontWeight: FontWeight.w800,
                                   maxLines: 2,
-                                  text: widget.chapterList[i]['title'],
+                                  text: widget.chapterListScraped[i]['title'],
                                 ),
                               ),
                             ),
-                          //for loop to generate as many rows with double.infinity width as there are chapters
-                          //rows()...
                         ],
                       ),
                     ),
