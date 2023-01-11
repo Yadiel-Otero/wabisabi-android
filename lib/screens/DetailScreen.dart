@@ -241,15 +241,6 @@ class _DetailScreenState extends State<DetailScreen> {
                               i++)
                             GestureDetector(
                               onTap: () => {
-                                /*
-                                   _launchInBrowser(
-                                  Uri.parse(
-                                    'https://mangapill.com' +
-                                    widget.chapterListScraped[i]['attributes']['href'],
-                                  ),
-                                ),
-                                */
-
                                 Navigator.of(context).push(
                                   new MaterialPageRoute(
                                     builder: (BuildContext context) =>
