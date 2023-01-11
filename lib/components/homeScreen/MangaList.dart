@@ -40,7 +40,6 @@ class MangaList extends StatelessWidget {
         //reason for wrap is so that if it goes out of bounds it will automatically go down
         child: Wrap(
           children: [
-            //START OF MANGA NUM CONTAINER
             Container(
               //color: Colors.blue, //DEBUGGING
               width: double.infinity,
@@ -68,15 +67,6 @@ class MangaList extends StatelessWidget {
                   ), //Makes the string a Uri object so i can pass it to the URI member inside mangaCard
                 ),
               ),
-
-            /* Center(
-                        child: MangaCard(
-                          mangaImg:
-                              'https://avt.mkklcdnv6temp.com/48/k/24-1634298190.jpg',
-                          mangaTitle: 'The Lone Necromancer',
-                        ),
-                      ),
-                      */
             Center(
               child: FloatingActionButton(
                 onPressed: () => {nextLink()},

@@ -7,8 +7,7 @@
   | - This file stores the scraped manga list and urls and passes it as a        |
   |    parameter to the MangaList.dart widget constructor so it can work its     | 
   |    magic.                                                                    |
-  |  
-  - Apart from the scraper, this file contains things such as                                                                  
+  |                                                              
   --------------------------------------------------------------------------------
 
 */
@@ -61,17 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
       mangaListImages += webscraper.getElement(
         'div.container.py-4 > div > div > a >figure > img',
         ['data-src'],
-        /*
-        MANGA PAGES 
-         'div.border.rounded.border-b-0.border-border.primary.overflow-hidden > div.relative.bg-card.flex.justify-center.items-center > picture > img',
-        ['data-src', 'alt'],
-        */
-
-        //'div.container.container-main > div.container-main-left > div.panel-content-homepage > div > a > img', //manga
-        //['src', 'alt'],
       );
 
-      //[i][title]
+      
       //i need to assign title: from 1 index onward 
       mangaListTitle += webscraper.getElement(
         
@@ -79,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
         [],
       );
 
-      //[i][attributes][href]
       mangaListLinks += webscraper.getElement(
         
         'div.container.py-4 > div > div > a',
@@ -91,17 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //I had to remove the first index because it was taking something from another div(TEMPORARY until i fix the core problem)
     mangaListTitle.removeAt(0);
-
-   
-
-    /*
-     ******************DEBUGGING**********************
-    //for (int i = 0; i < mangaList.length; i++)
-    mangaList[i]['attributes'].removeWhere((key, value) => key == key || value == null); //for removing null values
-    print(mangaList); //manga
-    print(mangaListLinks);
-    print(mangaList[i]['attributes']['src']); //manga
-    */
 
     setState(() {
       mangaLoaded = true;
@@ -124,19 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Constants.black,
-      /* appBar: AppBar(
-        title: CustomText(
-          text: 'Discover',
-          fontSize: 26,
-          fontWeight: FontWeight.w800,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-        backgroundColor: Constants.lightGray,
-      ),*/
+
       body: mangaLoaded
           ? PageView(
               children: [
@@ -156,36 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             )
           : MangaLoading(),
-
-      /*bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Constants.lightGray,
-        selectedItemColor: Constants.lightblue,
-        unselectedItemColor: Constants.white,
-        currentIndex:
-            selectedNavIndex, //We tell what the current index is, it changes dynamically with the navBarTap function
-        onTap: navBarTap, //on tap we execute navBarTap,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            label: 'Discover',
-            
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorite',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.watch_later),
-            label: 'Recent',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: 'More',
-          ),
-        ],
-      ),
-      */
     );
   }
 }
